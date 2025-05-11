@@ -26,7 +26,8 @@ async def generate_questions_api(
     file: UploadFile = File(...),
     topic: str = Form(...),
     difficulty: str = Form(...),
-    number_of_questions: str = Form(...)
+    number_of_questions: str = Form(...),
+    open_book: str = Form(...),
 ):
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as buffer:
@@ -34,5 +35,5 @@ async def generate_questions_api(
 
     ingest_document(file_path)
     relevant_chunks = query_vector_db(topic)
-    questions = generate_questions(relevant_chunks, topic, difficulty, number_of_questions)
+    questions = generate_questions(relevant_chunks, topic, difficulty, number_of_questions, open_book)
     return JSONResponse(content={"questions": questions})

@@ -4,8 +4,16 @@ genai.configure(api_key="AIzaSyBuFDI0ClvxUEnRPaHkljJh4r_vvY7dbI0")
 
 model = genai.GenerativeModel("gemini-2.0-flash")
 
-def generate_questions(chunks, topic, difficulty, number_of_questions):
+def generate_questions(chunks, topic, difficulty, number_of_questions, open_book):
     context = "\n\n".join(chunks)
+    
+    open_book_instruction = (
+        "Design the questions to test conceptual understanding, application, or analysis, "
+        "rather than memorization, since the exam is open book."
+        if open_book
+        else "Design the questions to test knowledge, recall, and understanding, assuming no access to the reference material."
+    )
+    
     prompt = f"""You are a precise and helpful educational assistant. Your task is to generate clear and concise exam questions that accurately assess understanding of the provided reference material. Use only the information within the reference and do not infer or fabricate content. Avoid any markdown, special characters, or numbering in your output.
 
 Instructions:
@@ -15,6 +23,7 @@ Instructions:
 - Format each question as a standalone sentence or directive.
 - Avoid repetition across questions.
 - Do NOT add any introductory or closing text. Output ONLY the questions as plain text, without numbering.
+- {open_book_instruction}
 
 Here are a few examples for guidance:
 
@@ -43,4 +52,5 @@ Questions:
 """
     response = model.generate_content(prompt)
     return response.text.strip().split("\n")
+
 

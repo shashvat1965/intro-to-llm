@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 import "./App.css"; // Import the CSS styles
 
 function App() {
@@ -9,6 +9,7 @@ function App() {
   const [questions, setQuestions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [numberOfQuestions, setNumberOfQuestions] = useState(5);
+  const [openBookTrueFalse, setOpenBookTrueFalse] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,6 +20,7 @@ function App() {
     formData.append("topic", topic);
     formData.append("difficulty", difficulty);
     formData.append("number_of_questions", numberOfQuestions.toString());
+    formData.append("open_book", openBookTrueFalse ? "true" : "false");
 
     setLoading(true);
     try {
@@ -83,6 +85,16 @@ function App() {
             <option value="easy">Easy</option>
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
+          </select>
+        </label>
+        <label>
+          Open Book:
+          <select
+            value={openBookTrueFalse ? "true" : "false"}
+            onChange={(e) => setOpenBookTrueFalse(e.target.value === "true")}
+          >
+            <option value="true">Yes</option>
+            <option value="false">No</option>
           </select>
         </label>
 
